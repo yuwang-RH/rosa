@@ -1179,9 +1179,26 @@ var _ = Describe("List IAM",
 		})
 
 		It("to list account-roles by rosa-cli - [id:44511]", labels.High, func() {
+
 			accrolePrefix := "arPrefix44511"
 			path := "/a/b/"
-			version := "4.15"
+
+			By("Prepare a version for testing")
+			var version string
+			versionService := rosaClient.Version
+			versionList, err := versionService.ListAndReflectVersions(rosacli.VersionChannelGroupStable, false)
+			Expect(err).To(BeNil())
+
+			defaultVersion := versionList.DefaultVersion()
+			Expect(defaultVersion).ToNot(BeNil())
+
+			major, minor, err := defaultVersion.MajorMinor()
+			Expect(err).To(BeNil())
+
+			version = fmt.Sprintf("%d.%d", major, minor)
+			fmt.Println("--debug 001")
+			fmt.Println(version)
+			fmt.Println("--debug 001 done")
 
 			By("Create account-roles")
 			output, err := ocmResourceService.CreateAccountRole("--mode", "auto",

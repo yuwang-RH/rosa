@@ -242,6 +242,25 @@ func (vl *OpenShiftVersionTableList) FilterVersionsLowerThan(version string) (nv
 	return
 }
 
+func (vl *OpenShiftVersionTableList) DefaultVersion() (defaultVersion *OpenShiftVersionTableOutput) {
+	for _, version := range vl.OpenShiftVersions {
+		if version.Default == "yes" {
+			return version
+		}
+	}
+	return
+}
+
+func (vl *OpenShiftVersionTableOutput) MajorMinor() (major int64, minor int64, err error) {
+	var semverVersion *semver.Version
+	if semverVersion, err = semver.NewVersion(vl.Version); err != nil {
+		return
+	}
+	major = semverVersion.Major()
+	minor = semverVersion.Minor()
+	return
+}
+
 func (vl *OpenShiftVersionTableList) Len() int {
 	return len(vl.OpenShiftVersions)
 }
