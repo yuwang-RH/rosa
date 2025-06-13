@@ -18,6 +18,8 @@ RUN wget https://go.dev/dl/go1.22.3.linux-amd64.tar.gz && \
 
 ENV GOTOOLCHAIN=local
 RUN go install github.com/onsi/ginkgo/v2/ginkgo@v2.13.2
+ENV GOFLAGS=-buildvcs=false
+RUN ls -al /rosa/.git
 RUN make release
 
 FROM registry.access.redhat.com/ubi9/ubi:latest
