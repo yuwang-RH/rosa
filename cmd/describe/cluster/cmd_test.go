@@ -314,6 +314,14 @@ var _ = Describe("getZeroEgressStatus", func() {
 		expectedOutput := "Zero Egress:                Disabled\n"
 		Expect(output).To(Equal(expectedOutput))
 	})
+	It("Should include zero egress disabled in the output since key is not in properties", func() {
+		mockCluster, err := cmv1.NewCluster().Build()
+		Expect(err).NotTo(HaveOccurred())
+		output, err := getZeroEgressStatus(mockCluster)
+		Expect(err).NotTo(HaveOccurred())
+		expectedOutput := "Zero Egress:                Disabled\n"
+		Expect(output).To(Equal(expectedOutput))
+	})
 })
 
 func printJson(cluster func() *cmv1.Cluster,
