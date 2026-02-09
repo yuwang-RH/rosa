@@ -1,3 +1,4 @@
 - name: cluster
 - name: interactive
 - name: log-fwd-config
+- name: output
