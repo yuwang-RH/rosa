@@ -153,29 +153,24 @@ func PrintNodePoolDiskSize(aws *cmv1.AWSNodePool) string {
 }
 
 func PrintCapacityReservationDetails(capacityReservation *cmv1.AWSCapacityReservation) string {
-	if capacityReservation != nil {
-		id, ok := capacityReservation.GetId()
-		if !ok {
-			return ""
-		}
-		marketType, ok := capacityReservation.GetMarketType()
-		if !ok {
-			return fmt.Sprintf("\n"+
-				" - ID:                                 %s\n",
-				id)
-		}
-		preference, ok := capacityReservation.GetPreference()
-		if !ok {
-			return fmt.Sprintf("\n"+
-				" - ID:                                 %s\n"+
-				" - Type:                               %s",
-				id, marketType)
-		}
-		return fmt.Sprintf("\n"+
-			" - ID:                                 %s\n"+
-			" - Type:                               %s\n"+
-			" - Preference:                         %s",
-			id, marketType, preference)
+	if capacityReservation == nil {
+		return ""
 	}
-	return ""
+
+	var details []string
+
+	if id, ok := capacityReservation.GetId(); ok {
+		details = append(details, fmt.Sprintf(" - ID:                                 %s", id))
+	}
+	if marketType, ok := capacityReservation.GetMarketType(); ok {
+		details = append(details, fmt.Sprintf(" - Type:                               %s", marketType))
+	}
+	if preference, ok := capacityReservation.GetPreference(); ok {
+		details = append(details, fmt.Sprintf(" - Preference:                         %s", preference))
+	}
+
+	if len(details) == 0 {
+		return ""
+	}
+	return "\n" + strings.Join(details, "\n")
 }
