@@ -68,6 +68,7 @@ func NewCreateLogForwarderCommand() *cobra.Command {
 	)
 
 	ocm.AddClusterFlag(cmd)
+	output.AddFlag(cmd)
 	interactive.AddFlag(flags)
 	return cmd
 }
