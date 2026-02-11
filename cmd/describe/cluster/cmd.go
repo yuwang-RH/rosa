@@ -1051,17 +1051,20 @@ func getRolePolicyBindings(roleARN string, rolePolicyDetails map[string][]aws.Po
 }
 
 func getZeroEgressStatus(cluster *cmv1.Cluster) (string, error) {
-	zeroEgressOutput := DisabledOutput
+	zeroEgressDescription := "Zero Egress:                %s\n"
 	zeroEgressPropVal, exists := cluster.Properties()["zero_egress"]
+	if !exists {
+		return fmt.Sprintf(zeroEgressDescription, DisabledOutput), nil
+	}
+	zeroEgressOutput := DisabledOutput
 	boolZeroEgressPropVal, err := strconv.ParseBool(zeroEgressPropVal)
 	if err != nil {
 		return "", err
 	}
-	if exists && boolZeroEgressPropVal {
+	if boolZeroEgressPropVal {
 		zeroEgressOutput = EnabledOutput
 	}
-	str := fmt.Sprintf("Zero Egress:                %s\n", zeroEgressOutput)
-	return str, nil
+	return fmt.Sprintf(zeroEgressDescription, zeroEgressOutput), nil
 }
 
 func getLimitedSupportReasons(limitedSupportReasons []*cmv1.LimitedSupportReason) string {
